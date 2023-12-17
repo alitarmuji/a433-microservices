@@ -1,0 +1,32 @@
+# Menggunakan Docker Compose versi 2.
+version: '2'
+
+# Membuat service
+services:
+  # Membuat service: item-app
+  item-app:
+    # Menggunakan image item-app dari GitHub Package
+    image: ghcr.io/alitarmuji2000/item-app:v1
+    # Menerapkan restart policy agar container selalu restart ketika terhenti.
+    restart: always
+    # Melakukan port mapping agar dapat diakses dari port 80 di host.
+    ports:
+      - "80:8080"
+    # Pastikan item-app hanya berjalan setelah item-db diluncurkan.  
+    depends_on:
+      - item-db
+
+  # Membuat service: item-db    
+  item-db:
+    # Menggunakan image mongo:3 dari Docker hub.
+    image: mongo:3
+    # Menerapkan restart policy agar container selalu restart ketika terhenti.
+    restart: always
+    # Memakai volume bernama app-db dengan target /data/db di container.
+    volumes:
+      - app-db:/data/db 
+
+# Membuat volume
+volumes:
+  # Membuat volume: app-db
+  app-db: 
